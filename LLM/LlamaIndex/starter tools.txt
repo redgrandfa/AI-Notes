@@ -1,0 +1,73 @@
+================
+Starter Tools
+================
+
+==== Full-stack web application generator
+  npx create-llama@latest
+
+==== SEC Insights: advanced query techniques
+  open-sourced a full-stack application 
+  that lets you select filings from public companies across multiple years and summarize and compare them. 
+  It uses advanced querying and retrieval techniques to achieve high quality results.
+
+  You can use the app yourself at SECinsights.ai
+
+==== Chat LlamaIndex: Full-stack chat application#
+  full-stack, open-source application
+  ...You can use it at chat.llamaindex.ai or check out the code on GitHub.
+
+==== LlamaBot: Slack and Discord apps
+  open-source application, 
+  this time for building a Slack bot that listens to messages within your organization and answers questions about what's going on. 
+  You can check out the [full tutorial and code on GitHub]https://github.com/run-llama/llamabot). 
+  If you prefer Discord, there is a Discord version contributed by the community.
+
+==== RAG CLI: quick command-line chat with any document
+  a command-line tool that quickly lets you chat with documents. 
+  Learn more in the RAG CLI documentation.
+
+
+=====
+RAG CLI
+====
+
+  chatting with an LLM about files you have saved locally on your computer.
+
+  By default, this tool uses OpenAI for the embeddings & LLM as well as a local Chroma Vector DB instance. 
+
+
+====
+  $ pip install -U llama-index
+
+You will also need to install Chroma:
+
+  $ pip install -U chromadb
+
+
+  $ llamaindex-cli rag -h
+  usage: llamaindex-cli rag [-h] [-q QUESTION] [-f FILES] [-c] [-v] [--clear] [--create-llama]
+
+  options:
+    -h, --help            show this help message and exit
+    -q QUESTION, --question QUESTION
+                          The question you want to ask.
+    -f FILES, --files FILES
+                          The name of the file or directory you want to ask a question about,such as "file.pdf".
+    -c, --chat            If flag is present, opens a chat REPL.
+    -v, --verbose         Whether to print out verbose information during execution.
+    --clear               Clears out all currently embedded data.
+    --create-llama        Create a LlamaIndex application based on the selected files.
+
+====
+Set the OPENAI_API_KEY environment variable: 
+  $ export OPENAI_API_KEY=<api_key>
+
+Ingest some files: Now, you need to point the tool at some local files that it can ingest into the local vector database. 
+  $ llamaindex-cli rag --files "./README.md"
+
+can specify a file glob pattern such as:
+
+  $ llamaindex-cli rag --files "./docs/**/*.rst"
+
+
+  ...略

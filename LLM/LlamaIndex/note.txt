@@ -1,0 +1,51 @@
+Quickstart Installation from Pip
+  pip install llama-index
+
+
+
+data connector 
+  ingest data... to documents
+documents 
+  nodes
+indexing
+  doc_store.json
+    chunks
+    in-memory | mongoDB | Redis
+
+  index_store.json
+    index metadata
+    in-memory | mongoDB | Redis
+
+  vector_store.json
+    embeddings
+    in-memory | wava... | pinecone | quadrant
+
+Retreivers
+  find relative nodes based on query
+  根據不同資料挑選適合的Retreiver
+
+Response Synthesizer
+  refine
+  accumulate
+  compact
+  compact and accumulate
+  tree summarize
+  simple summarize
+
+Query Engine
+
+
+
+-----High Level 五行
+  from llama_index.core import (
+      SimpleDirectoryReader,
+      VectorStoreIndex,
+  )
+
+  documents = SimpleDirectoryReader("data").load_data()  #documents是一個list
+  index = VectorStoreIndex.from_documents(documents)
+  query_engine = index.as_query_engine()
+  response = query_engine.query("What did the author do growing up?")
+  print(response) 
+
+

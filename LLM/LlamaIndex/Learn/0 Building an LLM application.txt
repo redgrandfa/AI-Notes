@@ -1,0 +1,4 @@
+two main parts: 
+  V Building a RAG pipeline
+  X Building an agent
+
