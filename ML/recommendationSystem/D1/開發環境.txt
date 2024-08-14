@@ -1,0 +1,28 @@
+主要有 runtime和直譯器 兩塊
+    直譯器
+    微軟安裝舊版
+        C:\\Users\\user\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\\python.exe
+
+
+
+
+Anaconda??
+
+Jupyter? notebook
+
+sy
+
+PyCharm
+
+
+    azure function 只支援 3.6~3.9?
+
+
+
+
+VSCode 套件
+    https://muki.tw/tech/other/vscode-extensions-better-comments-todo-tree/
+    Better Comments
+    Todo Tree
+
+

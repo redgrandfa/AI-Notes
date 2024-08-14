@@ -1,0 +1,71 @@
+https://eugeneyan.com/writing/system-design-for-discovery/
+====
+
+Specific to discovery systems (i.e., recommendations and search), most implementations I’ve come across follow a 
+    similar paradigm
+
+    components and processes are split into 
+        offline vs. online environments, and 
+        candidate retrieval檢索 vs. ranking steps. 
+        
+        The 2 x 2 below tries to simplify this.
+            ...
+
+
+    offline 
+        largely hosts batch processes such as model training (e.g., representation learning, ranking), creating 【embeddings】 for catalog目錄 items, 
+        and building an approximate nearest neighbors (ANN) index or knowledge graph 
+        to find similar items. 
+        It may also include loading item and user data into a feature store that is used to augment input data during ranking.
+
+
+    The online environment 
+        then uses the artifacts generated (e.g., ANN indices, knowledge graphs, models, feature stores) to serve individual requests. 
+        A typical approach is converting the input item or search query into an embedding, 
+            followed by candidate retrieval and ranking. 
+        There are also other 
+            【preprocessing steps】 (e.g., standardizing queries, tokenization, spell check) 
+            and 【post-processing steps】 (e.g., filtering undesirable items, business logic) 
+            though we won’t discuss them in this writeup.
+
+    
+
+    Candidate retrieval 
+        is a 【fast—but coarse粗糙—step】 to narrow down millions of items into hundreds of candidates. 
+        We trade off precision for efficiency to quickly narrow the search space (e.g., from millions to hundreds, a 99.99% reduction) for the downstream ranking task. 
+        Most contemporary同時期的 retrieval methods convert the input (i.e., item, search query) into an embedding before using ANN to find similar items. 
+        Nonetheless, in the examples below, we’ll also see systems using 
+            【graphs】 (DoorDash) and 
+            【decision trees】 (LinkedIn).
+
+    Ranking 
+        is a 【slower—but more precise—step】 to score and rank top candidates. 
+        As we’re processing fewer items (i.e., hundreds instead of millions), 
+            we have room to add features that would have been infeasible不可行 in the retrieval step (due to compute and latency潛在 constraints). 
+        Such features include item and user data, and contextual information. 
+        We can also use more sophisticated models with more layers and parameters.
+
+        Ranking can be modeled as a learning-to-rank or classification task, 
+            with the latter being more commonly seen.
+        If deep learning is applied, the final output layer is either 
+            a softmax歸一化指數函數 over a catalog of items, or 
+            a sigmoidS型函數/二焦點曲線函數 predicting the likelihood of user interaction (e.g., click, purchase) for each user-item pair.
+
+
+In the offline environment, 
+    data flows 【bottom-up】, 
+    where we use training data and item/user data to create artifacts such as models, ANN indices, and feature stores. These artifacts are then loaded into the online environment (via the dashed arrows). 
+
+In the online environment, 
+    each request flows 【left to right】, 
+    through the retrieval and ranking steps before returning a set of results (e.g., recommendations, search results).
+
+
+(Inconsistency between features used in training and serving)
+Use the same feature store in offline training and online serving to minimize train-serve skew. 
+Might require time travel.
+
+
+====Examples from Alibaba, Facebook, JD, Doordash, etc.
+
+

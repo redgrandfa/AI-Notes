@@ -1,0 +1,106 @@
+https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-python?pivots=python-mode-configuration
+
+
+
+Completing this quickstart incurs a small cost of a few USD cents or less in your Azure account.
+
+There's also a [CLI-based version] of this article.
+
+
+
+----environment
+    An Azure account with an active 【subscription】. Create an account for free.
+    
+    The 【Azure Functions Core Tools】 version 4.x.
+        https://learn.microsoft.com/zh-tw/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash
+        小節：安裝 Azure Functions Core Tools 
+
+    【Python versions】 that are supported by Azure Functions. For more information, see How to install Python.
+
+    【Visual Studio Code】 on one of the supported platforms.
+
+    The 【Python extension for Visual Studio Code】.
+
+    The 【Azure Functions extension for Visual Studio Code】, version 1.8.3 or a later version.
+
+
+----local project
+    Choose the Azure icon. 
+    Then in the Workspace (local) area, 
+    select the + button, choose Create Function in the dropdown.
+        When prompted, choose Create new project.
+
+
+    Choose the directory location for your project workspace and choose Select. 
+    You should either create a new folder or choose an empty folder for the project workspace. Don't choose a project folder that is already part of a workspace.
+
+
+    Select a language	
+        Choose Python.
+
+    【Select a Python interpreter】 to create a virtual environment	
+        Choose your preferred Python interpreter. 
+        If an option isn't shown, type in the full path to your Python binary.
+
+        只支援 3.6 ~ 3.9 我是3.10...
+            從微軟裝的3.9
+    
+    Select a template for your project's first function	
+        Choose HTTP trigger.
+
+    Provide a function name	
+        Enter HttpExample.
+
+    Authorization level	
+        Choose Anonymous (function/admin), which lets anyone call your function endpoint. For more information about the authorization level, see Authorization keys.
+
+    Select how you would like to open your project	
+        Choose Add to workspace. (缺這步驟)
+
+----Run the function locally
+    Visual Studio Code integrates with Azure Functions Core tools to let you run this project on your local development computer
+
+    To start the function locally, press F5 or the Run and Debug icon in the left-hand side Activity bar. 
+
+        跳過直譯器卡五分鐘https://github.com/Azure/azure-functions-core-tools/issues/1910
+
+        有微軟裝的python直譯器=>要執行來自這個不受信任的發行者的軟體嗎?
+            C:\Users\user\source\repos\projects\azure\.venv\Scripts\Activate.ps1 檔案是由 CN=Python Software Foundation,  
+            O=Python Software Foundation, L=Beaverton, S=Oregon, C=US
+            所發行，在您的系統上並不受信任。只可執行來自受信任的發行者的指令碼。
+            [V] 永不執行(V)  [D] 不要執行(D)  [R] 執行一次(R)  [A] 永遠執行(A)  [?] 說明 (預設值為 "D"): A
+
+            =>仍卡五分鐘...
+
+    The Terminal panel displays the Output from Core Tools. 
+
+    Your app starts in the Terminal panel. 
+    You can see the URL endpoint of your HTTP-triggered function running locally.
+
+    make sure that the default terminal for Visual Studio Code isn't set to WSL Bash.
+
+
+    【With Core Tools still running in Terminal】, 
+    In the Workspace area(第一次要按重新整理), expand Local Project > Functions. 
+    Right-click the new function and choose Execute Function Now....
+
+    In Enter request body 
+        you see the request message body value of { "name": "Azure" }. 
+    Press Enter to send this request message to your function.
+
+    When the function executes locally and returns a response, 
+        a notification is raised in Visual Studio Code. 
+        Information about the function execution is shown in Terminal panel.
+
+    With the Terminal panel focused, 
+        press Ctrl + C to stop Core Tools and disconnect the debugger.
+
+
+----Sign in to Azure
+    Resources area, choose Sign in to Azure....
+
+
+----Create the function app in Azure
+    In this section, you create a function app and related resources in your Azure subscription.
+
+    Choose the Azure icon in the Activity bar. Then in the Resources area, select the + icon and choose the Create Function App in Azure option.

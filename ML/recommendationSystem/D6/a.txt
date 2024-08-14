@@ -1,0 +1,42 @@
+Implicit Feedback
+    偷記錄
+
+    不同動作的權重?
+
+
+顯
+    不能什麼都問
+
+
+
+
+
+
+utility矩陣 效用矩陣
+    input資料本身 包含更多資訊
+
+
+
+26:37
+    user profile
+
+
+    filtering 業態
+
+    domain knowledge
+
+
+    實務上 要先貼好標籤
+
+        人工的標籤最理想?
+
+        專家系統 專家貼標
+
+
+[
+    { "FeedbackType": "star", "UserId": "bob", "ItemId": "vuejs:vue", "Timestamp": "2022-02-24" },
+    { "FeedbackType": "star", "UserId": "bob", "ItemId": "d3:d3", "Timestamp": "2022-02-25" },
+    { "FeedbackType": "star", "UserId": "bob", "ItemId": "dogfalo:materialize", "Timestamp": "2022-02-26" },
+    { "FeedbackType": "star", "UserId": "bob", "ItemId": "mozilla:pdf.js", "Timestamp": "2022-02-27" },
+    { "FeedbackType": "star", "UserId": "bob", "ItemId": "moment:moment", "Timestamp": "2022-02-28" }
+]

@@ -1,0 +1,59 @@
+https://medium.com/double-pointer/system-design-interview-recommendation-system-design-as-used-by-youtube-netflix-etc-c457aaec3ab
+=====
+content-based  collaborative
+
+explicit Feedback 
+    not scalable
+
+Implicit Feedback 
+    more scalable 
+    negative ratings cannot be gathered through this approach.
+
+Hybrid Feedback
+
+Utility Matrix
+    relation between users and movies
+
+    in reality, a utility matrix is created to map users onto the items.
+
+    model for recommendation system will take
+     a set of customers C and 
+     a set of items (S) 
+     as input for a utility function or utility matrix (u) 
+     to generate a set of ratings (R).
+
+
+     The utility function considers each pair of customer and item 
+        and maps it to a rating. 
+    Depending on your design, 
+    R can be a set of ratings on a scale of 1 to 5 or 1 to 10. 
+    A low rating indicates that the user liked the product less while a higher rating indicates that the user liked it more.
+
+====【重點】Recommendation System Architecture
+
+
+1. explicitly and implicitly => Profile Builder
+
+
+2. 【Candidate Generation service】
+     compares the 【Individual Interests database】
+    with 【Similar Items database】 
+    to pick product candidates that could be of interest to the user.
+
+    (【Similar Items database】 can be 
+        the database of items used by similar users 
+            (in the case of collaborative filtering) 
+        or
+        a database of items with similar features 
+            (in the case of content-based filtering).)
+
+3. Candidate Rating service scores each candidate
+    based on the strength of similarities between user’s interest and the compared items.
+
+
+4. Filtering service  filter out the candidates that have a lower score. 
+
+5. The candidates with high scores that remain in the list are sorted 
+
+6. appear in the list of recommendations for the user.
+

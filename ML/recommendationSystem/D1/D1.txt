@@ -1,0 +1,66 @@
+
+----
+
+    https://www.datacamp.com/users/sign_in?redirect=http%3A%2F%2Fapp.datacamp.com%2Flearn%2Fcourses%2Fbuilding-recommendation-engines-in-python
+
+
+    演算法相關的 鎖起來
+
+
+
+    ----
+    NLP nature language process 文字探勘
+        將 non structure => structure
+
+        詞頻
+
+
+
+        K-nearest 演算法 
+            可能有量級 不統一問題 ，可能都偏向量級較大的 => normalize
+
+        classification
+        similarity => 圖論
+            n維空間中的一個點 找他附近的點 => 演算法算距離
+
+
+        netflex比賽 => 使用者觀看紀錄，做推薦系統 
+            紅  collaborative filtering 協同過濾
+                看過 買過 權重不同
+
+                (user , item) pair  都會有個分數 => 建立出一個矩陣 user x item
+
+                filter = 掃瞄矩陣  透過矩陣找相似性
+
+
+                可以平行計算，因為 矩陣可以分解
+
+                sparse問題 稀疏矩陣
+
+
+        矩陣分解、驗證預測
+        強固性
+            用不同的資料下去訓練模型時，是否被資料偏誤影響 
+                ex. 只有亞洲人的資料 能否給非洲人用?  
+                    臉部辨識
+
+                ex.店商有季節性 蒐集淡季/旺季
+                    雙11的資料抽掉  
+                        因為促銷驅動
+                        消耗品累積在雙11買 
+
+
+
+====Python 學習資源
+
+    - https://app.datacamp.com/learn/courses/intro-to-python-for-data-science
+
+    - https://app.datacamp.com/learn/courses/data-manipulation-with-pandas
+
+    - https://app.datacamp.com/learn/courses/joining-data-with-pandas
+
+    - https://medium.com/ntu-data-analytics-club/python-advanced-%E4%B8%80%E8%B5%B7%E4%BE%86%E7%94%A8-pandas-%E7%8E%A9%E8%BD%89%E6%95%B8%E6%93%9A-6d06d805941a
+
+
+====推薦系統 學習資源
+    https://app.datacamp.com/learn/courses/building-recommendation-engines-in-pytho

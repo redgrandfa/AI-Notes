@@ -1,0 +1,110 @@
+cos算水平距離 等等
+降維
+======
+https://ithelp.ithome.com.tw/articles/10219033
+
+kaggle 
+https://www.kaggle.com/code/annalee7/content-based-movie-recommendation-engine/notebook
+
+搭配Kaggle上的例子
+
+Kaggle
+    是一個數據建模和數據分析競賽平台。企業和研究者可在其上發布數據，統計學者和數據挖掘專家可在其上進行競賽以產生最好的模型。
+
+----
+google colab 就是一個 Jupyter的環境?
+    ! 可加終端機語法
+
+Hugging Face??
+    美國公司，開發使用機器學習構建應用程序的工具。
+    最著名的是其為自然語言處理應用程序構建的Transformers庫，
+        以及允許用戶共享機器學習模型和數據集的平台。
+
+Kaggle應該也可你
+
+----
+
+購物籃分析 
+瀏覽 Page View
+用戶評價(Rating
+
+
+推薦系統的類別主要分為下列三種：
+    Content Based Filtering
+        1.依據一件瀏覽或已購買的商品，推薦屬性相似的商品。
+        2.結合使用者評價與商品屬性，推薦使用者偏好的商品。
+
+    協同過濾(Collaborative Filtering, CF)
+        Memory Based Collaborative Filtering
+        Model Based Collaborative Filtering
+            種機器學習、深度學習(Deep Learning, RL)或強化學習(Reinforcement learning, DL)的演算法構築
+    Hybrid approach
+
+
+=====1.
+
+missing value 清理
+    df.isnull().any()
+
+    .isna =>  is NaN  not a number ，在python計算 統計時會排除NaN ， 所以空值要變成NaN
+    .fillna()
+
+
+
+
+
+
+使用BOW (bag of words) 統計詞頻
+    全大/小寫
+    中文要先做斷詞 => 工具：結疤系列? 
+
+    nltk庫 = nature language toolkit
+        rake方法
+
+        停用詞 stopping word
+        標點 (puntuation characters)
+
+
+    word degree 字的分數
+
+
+    用 一群關鍵字 代表一部電影
+        電影tilte <--> keywords
+
+
+    cosine_similarity => 相似度矩陣!!
+
+
+
+    TF-IDF  (term frequency–inverse document frequent)
+        BOW只看數量 可能 不如看比重
+
+
+        不重要的放分母??  大分母 拉低頻率...
+
+    Jaccard Similarity
+        n(交集) /  n(聯集)
+
+
+----
+第二種作法
+如果我們有使用者評價資料，那就可以結合商品屬性資料，那就可以作矩陣相乘，產生使用者喜歡的商品屬性，之後，就可以按第一種作法進行相似性計算或進行統計，找出推薦的商品，結果出來後，記得刪除使用者已購買過的商品。
+
+新顧客，會造成無法推薦=>『冷啟動』(Cold Start)的問題
+
+
+------assign
+    keggle 直接按 copy and edit 
+     
+    用TF-IDF 取代 BOW 試試看
+    用Jaccard Similarity 取代 cosine similarity
+
+    可以變出四種model @@
+
+
+
+----
+    正常的資料來源
+        ex. 買GA
+            page view
+            

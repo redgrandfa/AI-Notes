@@ -1,0 +1,49 @@
+推薦系統
+    黏著度、回頭率
+    datacamp 有 python的課
+
+
+segmentation 用戶分群
+looklikable?
+
+----
+先做出能動的推薦系統 再逐漸改善
+
+最無腦：隨機推薦 benchmark基準
+
+上限之前想測試=> 回測
+    ex. 本來就有蒐集用戶點擊資料
+
+coStart時期
+     缺乏User Behavier 剛開始學習時很不準
+    一開始需要domain knowleadge的 input 
+
+    content based algorithm?
+
+
+
+coursera Minisoda ? 有個一學期的課?
+----
+推薦系統：
+    外殼 實務問題 定義問題
+    引擎 演算法
+
+----課程安排
+    開放式課程
+        基本觀念
+        手把手
+
+    實戰分享
+    前緣理論
+
+
+    每週四八點
+        先office hour
+
+
+
+
+
+            
+
+

@@ -1,0 +1,406 @@
+協同過濾
+    自修材料：
+
+將銷售/評價記錄轉成『使用者/商品對應的矩陣』(User-Item Matrix)
+以User-Item Matrix，
+    計算'顧客間'的相似度，推薦相似顧客偏好的商品
+    計算'商品間'的相似度，推薦與目前商品最相似的其他商品
+        進行 cross selling
+
+
+USER-USER 協同過濾
+    轉換為  最相似的顧客族群(USER-USER Similarity Matrix)，
+    參考相似顧客，推薦給目前鎖定的顧客。
+
+
+ITEM-ITEM 協同過濾：
+    找出與目前瀏覽的商品最相似的商品族群(ITEM-ITEM Similarity Matrix)，
+    推薦給顧客。
+
+
+如何從User-Item Matrix轉換為 USER-USER Similarity Matrix 或 ITEM-ITEM Similarity Matrix
+
+
+Jaccard Similarity
+Pearson Similarity：兩兩計算其『皮爾森係數』(Pearson coefficient)。 相關係數?
+Cosine Similarity
+
+USER-USER 協同過濾 法是推薦最多使用者購買的商品，所以，常會推薦熱銷品，
+ITEM-ITEM 協同過濾 就比較容易推薦到長尾(long tail)的商品
+    (銷量不大，但一直持續有人購買)，這對公司整體營收會有較良性的助益
+
+
+『冷啟動』(Cold Start)
+
+---心得
+    (User-Item Matrix) = 向量表格
+        橫看=User向量 => 可算出 pairwise user similarity
+        豎看=Item向量 => 可算出 pairwise Item similarity
+
+    
+    耗時考量
+        會員很多 USER-USER Similarity Matrix計算非常耗時
+        內容很多 Item-Item Similarity Matrix計算非常耗時
+
+
+----問題：
+    沒有評過分，User-Item Matrix的格子要填0好像也不合理
+
+
+====怎麼deploy 到 azure function
+    pipfile 像 requirement
+
+    train.py
+        from numpy import asarray
+        from numpy import save
+        save( cosine_sim.npy) => numpy的資料格式 (binary，可以被讀成numpy陣列，檔很大)
+
+        df.to_csv('df_keys.csv')
+
+    終端機 pipenv run train.py
+
+
+    main.py
+        cosine_sim = numpy.load( 'cosine_sim.npy')
+        df_keys = pd.read_csv('df_keys.csv')
+
+
+        app = FastAPI()  facebook做的
+
+        @app.get("/")
+        def read_root():
+            return {"a":"w"}
+
+        @app.get("/items/{item_str}")
+        def read_item(item_str:str , q:Union[str,None]=None):
+            return {"result":推薦方法(item_str) , "q":q} #queryString
+
+
+        
+
+
+    更新 => 整包重算
+        incremental? 如何只更新該更新的部分
+        
+
+
+----
+    corrwith
+
+    近期的rating 權重應較高
+
+    Day09 接近memory based
+
+
+----
+    UI 評價矩陣，稀疏，如何預測?
+        先做出pairwise UU相似度矩陣?
+            找與Ui前5相似的U，針對Ij 相似度加權平均
+
+        先做出pairwise II相似度矩陣?
+            找與Ij前5相似的I，針對Ui 相似度加權平均
+
+
+
+
+         sparsity and scalability 
+    decompose the original sparse matrix to low-dimensional matrices 
+        with latent features
+
+
+    大矩陣且稀疏
+        降維
+
+
+        最有影響力的變數是什麼?
+
+
+    The advantage of 矩陣分解 over standard nearest neighborhood is that 
+        even though two users haven’t rated any same movies, 
+        it’s still possible to find the similarity between them 
+        if they share the similar underlying tastes, again latent features.
+
+Singular Value Decomposition(SVD)
+    any real matrix R_n列m欄 = UΣV轉
+        U_n × r user-latent feature matrix, r項潛在特徵
+        Σ_r × r diagonal matrix  (為何一定是diagonal?)
+            containing the 【singular values of original matrix】, 
+            simply representing how important a specific feature is to predict user preference.
+        V_m × r movie-latent feature matrix. 
+
+    篩剩下k個，重乘成A矩陣 相似於 R
+    The selection of k should make sure that A is able to capture the most of variance within the original matrix R
+    
+    The difference between A and R is the error that is expected to be minimized.
+        Principle Component Analysis.主成分分析
+
+
+
+    When matrix R is dense, U and V could be easily factorized analytically.
+
+    Instead of factorizing R via SVD, we are trying find U and V directly with the goal that when U and V multiplied back together the output matrix R’ is the closest approximation of R
+    
+    Non-Negative Matrix Factorization for recommender systems since there is no negative values in ratings.
+
+
+    r預ᵤᵢ = pᵤ qᵢ
+
+    optimal qᵢ and pᵤ => a loss function is defined to minimize the cost of errors.
+
+    最佳化
+        L2正則畫 
+        bias term which usually has 3 major components: 
+            average rating of all items μ, 
+            average rating of item i minus μ(noted as bᵤ), 沒弄反??
+            average rating given by user u minus u(noted as bᵢ).
+
+    solve Non-Negative Factorization (N MF)
+
+        ALS  Alternative Least Square 
+            the loss function is non-convex非凸 in this case 
+                https://www.796t.com/content/1543908005.html 凸優化比較高效，非凸優化只能拆成多處凸優化的問題
+            no way to reach a global minimum, while it still can reach a great approximation by finding local minimums.
+            交替偏微分 直到收斂
+
+             also called Coordinate Descent 
+
+    cold start
+        new item
+        items from the tail that didn’t get too much data, the model tends to give less weight on them and have popularity bias by recommending more popular items.
+
+
+
+====
+
+    u.item: movies
+    u.data: ratings given by users
+
+====
+    ==== Memory Based
+        減掉自己的平均評分=> centered cosine (centered cosine as Pearson Correlation.)
+
+        取相似度前5左右，weighted average
+
+
+        In a system where there are more users than items, 
+            item-based filtering is faster and more stable than user-based. 
+            It is effective because usually, 
+                the average rating received by an item doesn’t change
+                    as quickly as 
+                the average rating given by a user to different items.
+
+        also known to 【perform better than the user-based】 approach 
+            when the ratings matrix is sparse.
+
+        item-based approach 【performs poorly】 for datasets with 【browsing or entertainment related】 items such as MovieLens
+            Such datasets see better results with 
+                matrix factorization techniques, 
+                with hybrid recommenders (+ content-based filtering).
+
+        library Surprise
+
+
+    ==== Model Based (機器學習...)
+        Dimensionality Reduction
+            If the matrix is mostly empty, 
+                reducing dimensions can improve the performance of the algorithm( both space and time).
+
+    
+         the greater the number of factors, the more personalized the recommendations
+          too many factors can lead to overfitting in the model.
+
+        SVD(Netflix prize competition) 
+        PCA and its variations, NMF,
+        Autoencoders(Neural Networks)
+
+        surprise
+            pip install scikit-surprise
+
+            Dataset.load_builtin()
+            Dataset.load_from_file()
+            Dataset.load_from_df()
+
+        ====code
+            from surprise import Dataset
+            from surprise import Reader
+
+            ratings_dict = {
+                "item": [1, 2, 1, 2, 1, 2, 1, 2, 1],
+                "user": ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E'],
+                "rating": [1, 2, 2, 4, 2.5, 4, 4.5, 5, 3],
+            }
+
+            df = pd.DataFrame(ratings_dict)
+            reader = Reader(rating_scale=(1, 5))
+            data = Dataset.load_from_df( df[["user", "item", "rating"]], reader)
+
+            movielens = Dataset.load_builtin('ml-100k')
+
+        ====Algorithms Based on K-Nearest Neighbours (k-NN)
+            Centered k-NN algorithm is very close to the centered cosine similarity formula 
+            available in Surprise as KNNWithMeans.
+
+            ----
+                from surprise import KNNWithMeans
+
+                sim_options = {
+                    "name": "cosine", #similarity metric. cosine, msd(預設), pearson, or pearson_baseline. 
+                    "user_based": False,  #user-based(預設) or item-based.
+                    #"min_support": ... #兩user(item)之間，最少要有幾個common items(users) 
+                }
+                algo = KNNWithMeans(sim_options=sim_options)
+
+            ----分成train / test (可能是要測過度擬合??)
+            Trainset is built using the same data 
+                but contains more information about the data, 
+                such as the number of users and items (n_users, n_items) that are used by the algorithm
+
+
+            can create it either by using the entire data or a part of the data. 
+            divide the data into folds where some of the data will be used for training and some for testing.
+
+            only one pair of training and testing data is usually not enough.
+                multiple observations with variations        
+
+            Algorithms should be cross-validated using multiple folds. 
+            By using different pairs, you’ll see different results given by your recommender. 
+            MovieLens 100k provides five different splits of training and testing data: 
+                u1.base, u1.test, u2.base, u2.test … u5.base, u5.test, for a 5-fold cross-validation
+
+        ----
+            from load_data import data
+            from recommender import algo
+            trainingSet = data.build_full_trainset()
+
+            algo.fit(trainingSet)
+
+                #Computing the cosine similarity matrix...
+                #Done computing similarity matrix.
+                #<surprise.prediction_algorithms.knns.KNNWithMeans object at 0x7f04fec56898>
+
+            prediction = algo.predict('E', 2) # user E => item 2
+            prediction.【est】
+            
+        ----
+        try different k-NN based algorithms along with different similarity options and matrix factorization algorithms available in the Surprise library.
+
+
+        beat some benchmarks.
+
+    
+===Tuning the Algorithm Parameters
+    MAE
+        平均絕對誤差  
+        各項誤差絕對值，的平均
+
+    RMSE root-mean-square deviation
+        均方根誤差  (最小平方法(OLS)定義的損失函數(Loss Function) )
+        各項誤差 【平方和】平均 ，開根號
+
+            更表現出平均的誤差?
+            較不受極端值影響?
+
+    訓練7 測試3
+
+    需了解演算法的原因?
+        input的東西不對 導致算不好
+
+        資料有哪些特性時，適合那些演算法? longtail...
+
+    model tuning
+        暴力檢查 哪一組參數表現最佳
+
+    ----
+    Surprise => GridSearchCV class 
+        analogous to 
+    scikit-learn => GridSearchCV.
+
+    With a 【dict of all parameters】, GridSearchCV tries all the combinations of parameters and reports the best parameters for any 【accuracy measure】
+
+    EX. check which similarity metric works best for your data in memory-based approaches:
+    ```
+        from surprise import KNNWithMeans
+        from surprise import Dataset
+        from surprise.model_selection import GridSearchCV
+
+        data = Dataset.load_builtin("ml-100k")
+        sim_options = {
+            "name": ["msd", "cosine"],
+            "min_support": [3, 4, 5],
+            "user_based": [False, True],
+        }
+
+        param_grid = {"sim_options": sim_options}
+
+        gs = GridSearchCV(KNNWithMeans, param_grid, measures=["rmse", "mae"], cv=3)
+        gs.fit(data)
+
+        print(gs.best_score["rmse"])
+            #0.9434791128171457
+        print(gs.best_params["rmse"])
+            #{'sim_options': {'name': 'msd', 'min_support': 3, 'user_based': False}}
+    ```
+
+    ==== (won’t be any similarity metrics)
+    model-based approaches,
+        n_epochs  ?????
+            is the number of iterations of SGD, which is basically an iterative method used in statistics to minimize a function.
+        
+        lr_all  ?????
+            is the learning rate for all parameters, which is a parameter that decides how much the parameters are adjusted in each iteration.
+        
+        reg_all 
+            is the regularization term for all parameters, which is a penalty term added to prevent overfitting.
+
+        ---SVD
+            from surprise import SVD
+            from surprise import Dataset
+            from surprise.model_selection import GridSearchCV
+
+            data = Dataset.load_builtin("ml-100k")
+
+            param_grid = {
+                "n_epochs": [5, 10],
+                "lr_all": [0.002, 0.005],
+                "reg_all": [0.4, 0.6]
+            }
+            gs = GridSearchCV(SVD, param_grid, measures=["rmse", "mae"], cv=3)
+
+            gs.fit(data)
+
+            print(gs.best_score["rmse"])
+                0.9642278631521038
+            print(gs.best_params["rmse"])
+                {'n_epochs': 10, 'lr_all': 0.005, 'reg_all': 0.4}
+
+====
+    Collaborative filtering doesn’t require features about the items or users to be known. 
+    though, known features like writers and genres can be useful and might benefit from content-based
+
+    Collaborative filtering can help recommenders to not overspecialize in a user’s profile
+    recommend items that are completely different from what they have seen before. 
+
+    cold start => 新產品不會被推薦
+
+    Data sparsity can affect the quality of user-based recommenders，也是冷啟動問題
+
+    Scaling can be a challenge for growing datasets as the complexity can become too large. 
+        Item-based recommenders are faster than user-based when the dataset is large.
+        為何
+
+    With a straightforward implementation, you might observe that the recommendations tend to be already popular, and the items from the long tail section might get ignored.
+
+    multiple algorithms working together or in a pipeline 
+
+
+
+====assign
+    上週deploy到 azure function 
+    協同過濾lab 跑起來
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+兩個延伸模組
+    先裝Azure (猜是Azure account?)，使左邊條有icon
+    Azure functions => 使VScode可推code到Azure上
+
+    登入
+        v0.11.2，
+            非公司帳號 => 缺訂用帳戶? => 將訂用帳戶變更目錄
+            公司帳號，但瀏覽器告知可關閉 頁面時，resources仍是未登入的畫面，沒變化
+            Azure: Sign Out命令可登出
+            Azure: Select Tenant 可選租戶/目錄
+
+        Azure Account  v0.9.11 => waiting for Azure sign-in
+        
+        訂用帳戶選一個展開...
+
+
+    resouce
+        create project
+
+        select language 選python
+        project
+
+        trigger 有很多種 http、time
+        create trigger
+
+        根目錄
+            azure function的專案結構
+                requirements.txt
+                    放python套件
+                    azure-functions
+                    pandas
+                    numpy
+
+                _init_.py 
+                    main ( request => response)
+
+                需要的檔案先丟 根目錄
+
+        函數應用程式
+
+
+    workspace
+        部署案上雲那個icon
+        或者對某個Function App 右鍵
+
+====
+    Azure網站
+        編碼+測試
+
+
+
+        超過5mb 無法上、也沒有版控
+
+        ! 此函數已透過外部編輯器編輯，入口網站編輯已停用
+
+        測試/執行 按鈕
+            toy story => 找不到?
+
+
+    定價
+        沒有免費方案
+        選 使用量?
+        一個帳戶底下可以有一個免費的quota => 一個月一百萬次
+
+    邱：覺得API不適合放，因為常被call
+        train.py倒可以
+
+        免費的有冷啟動? premium
+
+
+    Azure function 和 Azure App Service的比較
+    B1一個月390
+    一個月37xx?
